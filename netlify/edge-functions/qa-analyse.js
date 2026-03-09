@@ -3,7 +3,7 @@ export default async function handler(request) {
     return new Response("Method not allowed", { status: 405 });
   }
 
-  const API_KEY = Netlify.env.get("ANTHROPIC_API_KEY");
+  const API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
 
   if (!API_KEY) {
     return new Response(
