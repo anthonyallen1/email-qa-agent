@@ -17,6 +17,10 @@ exports.handler = async function(event) {
   try {
     const body = JSON.parse(event.body);
 
+    // Append instruction to be concise to the system prompt
+    var system = body.system || "";
+    system += "\n\nCRITICAL: Keep ALL text fields very short (1 sentence max). Keep arrays to max 2 items each. This ensures the response fits within token limits.";
+
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
@@ -26,8 +30,8 @@ exports.handler = async function(event) {
       },
       body: JSON.stringify({
         model: "claude-haiku-4-5-20251001",
-        max_tokens: 3000,
-        system: body.system || "",
+        max_tokens: 2800,
+        system: system,
         messages: body.messages || [],
       }),
     });
