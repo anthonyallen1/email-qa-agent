@@ -73,12 +73,12 @@ function Pl({v="default",children}){const cols={error:"#f87171",warning:"#fbbf24
 function Sc({icon,title,pill,children,open:def=false}){const[o,sO]=useState(def);return<div className="sec" style={{height:"fit-content"}}><button className="sh" onClick={()=>sO(!o)}><span style={{fontSize:17}}>{icon}</span><span style={{flex:1,fontWeight:600,fontSize:15,color:"#fff"}}>{title}</span>{pill}<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{opacity:.4,transform:o?"rotate(180deg)":"none",transition:"transform .2s"}}><path d="M6 9l6 6 6-6"/></svg></button>{o&&<div className="sb">{children}</div>}</div>}
 
 function App(){
-const[splash,setSplash]=useState(true);const[step,setStep]=useState("upload");const[img,setImg]=useState(null);const[ip,setIp]=useState(null);
+const[step,setStep]=useState("upload");const[img,setImg]=useState(null);const[ip,setIp]=useState(null);
 const[bm,setBm]=useState("paste");const[bt,setBt]=useState("");const[bf,setBf]=useState(null);const[bn,setBn]=useState("");
 const[sl,setSl]=useState("");const[ph,setPh]=useState("");const[tm,setTm]=useState("basic");
 const[ld,setLd]=useState(false);const[res,setRes]=useState(null);const[er,setEr]=useState(null);const[pg,setPg]=useState("");
 const iR=useRef(null);const bR=useRef(null);
-useEffect(()=>{const t=setTimeout(()=>setSplash(false),3000);return()=>clearTimeout(t)},[]);
+
 const oI=useCallback(e=>{const f=e.target.files?.[0];if(!f)return;setImg(f);const r=new FileReader();r.onload=ev=>setIp(ev.target.result);r.readAsDataURL(f)},[]);
 const oB=useCallback(e=>{const f=e.target.files?.[0];if(!f)return;setBf(f);setBn(f.name);if(f.type==="text/plain"||f.name.endsWith(".txt")){const r=new FileReader();r.onload=ev=>setBt(ev.target.result);r.readAsText(f)}},[]);
 const oD=useCallback((e,t)=>{e.preventDefault();const f=e.dataTransfer.files[0];if(!f)return;if(t==="img"&&f.type.startsWith("image/")){setImg(f);const r=new FileReader();r.onload=ev=>setIp(ev.target.result);r.readAsDataURL(f)}else if(t==="brief"){setBf(f);setBn(f.name)}},[]);
@@ -91,11 +91,11 @@ if(!rp.ok)throw new Error("API error "+rp.status);const d=await rp.json();const 
 setRes(JSON.parse(tx.replace(/```json|```/g,"").trim()));setStep("results")}catch(e){setEr("Failed: "+e.message)}finally{setLd(false);setPg("")}};
 const reset=()=>{setStep("upload");setImg(null);setIp(null);setBt("");setBf(null);setBn("");setSl("");setPh("");setRes(null);setEr(null)};
 const ax=(s,i)=><div key={i} className="as">{s}</div>;
-const SplashScreen=()=><div className={"splash"+(splash?"":" hide")}><video src={VIDEO} autoPlay muted playsInline style={{maxWidth:280}}/></div>;
+
 const Hdr=({sub})=><div className="hdr"><div className="hdr-in" style={{maxWidth:1100}}><div style={{display:"flex",alignItems:"center",gap:14}}><img src={LOGO} alt="OKX" style={{width:38,height:38,borderRadius:10}}/><div><div style={{fontSize:16,fontWeight:700,letterSpacing:-.3,color:"#fff"}}>Email QA Agent</div><div style={{fontSize:12,color:"rgba(255,255,255,0.45)",marginTop:1}}>{sub}</div></div></div>{step==="results"&&<div style={{display:"flex",gap:8}}><button onClick={()=>window.print()} style={{padding:"8px 18px",borderRadius:10,fontSize:13,fontWeight:600,border:"1px solid rgba(188,255,47,0.3)",background:"rgba(188,255,47,0.1)",color:"#BCFF2F",cursor:"pointer"}}>{"\u2913 Download PDF"}</button><button onClick={reset} style={{padding:"8px 18px",borderRadius:10,fontSize:13,fontWeight:600,border:"1px solid var(--border)",background:"rgba(255,255,255,0.06)",color:"#fff",cursor:"pointer"}}>{"\u2190 New Review"}</button></div>}</div></div>;
 
 if(step==="upload"){const ok=img&&(bm==="paste"?bt.trim():bf);
-return<><SplashScreen/><Hdr sub="Upload \u2022 Review \u2022 Optimise"/>
+return<><Hdr sub="Upload \u2022 Review \u2022 Optimise"/>
 <div className="wrap">
 <div className="anim"><div className="lbl">Template Type</div><div className="g2">{Object.entries(T).map(([k,s])=><button key={k} onClick={()=>setTm(k)} className={"tb"+(tm===k?" on":"")}><div style={{fontSize:15,fontWeight:650,color:"#fff"}}>{s.name}</div><div style={{fontSize:13,color:"rgba(255,255,255,0.55)",marginTop:4,lineHeight:1.4}}>{s.desc}</div></button>)}</div></div>
 <div className="anim d1"><div className="lbl">Subject Line & Preheader</div><div className="g2"><div><div style={{display:"flex",justifyContent:"space-between",marginBottom:7}}><label style={{fontSize:13,fontWeight:600,color:"rgba(255,255,255,0.7)"}}>Subject Line</label><CC n={sl.length} max={33}/></div><input value={sl} onChange={e=>setSl(e.target.value)} placeholder="Enter subject line..." className={"inp"+(sl.length>33?" over":"")}/></div><div><div style={{display:"flex",justifyContent:"space-between",marginBottom:7}}><label style={{fontSize:13,fontWeight:600,color:"rgba(255,255,255,0.7)"}}>Preheader</label><CC n={ph.length} max={37}/></div><input value={ph} onChange={e=>setPh(e.target.value)} placeholder="Enter preheader text..." className={"inp"+(ph.length>37?" over":"")}/></div></div></div>
